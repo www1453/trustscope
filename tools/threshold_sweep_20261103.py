@@ -61,13 +61,15 @@ def main():
         bc = sum(1 for d in cls['b'] if d >= t)
         sc = sum(1 for d in cls['s'] if d >= t)
         det = (pc + bc + 12) * 100.0 / 48.0      # corner 12/15 is limit-independent
-        print(' %2d |  %d/36 = %4.1f%% | %2d/22 = %4.1f%% | %d/11 = %4.1f%% | %d/16 | %2d/48 = %4.1f%%'
+        print(' %2d |  %d/36 = %4.1f%% | %2d/22 = %4.1f%% | %d/11 = %4.1f%% | %d/16 = %4.1f%% | %2d/48 = %4.1f%%'
               % (t, fa, 100.0 * fa / 36, pc, 100.0 * pc / 22,
-                 bc, 100.0 * bc / 11, sc, pc + bc + 12, det))
+                 bc, 100.0 * bc / 11, sc, 100.0 * sc / 16, pc + bc + 12, det))
     print()
     print('adjudicated point (retest-informed): t=8 -> 3/34 = 8.8% judgeable | 3/40 = 7.5% all')
     print('retest covered 10 of 40 good placements: only the t=8 point is retest-adjudicated;')
     print('all other thresholds are SINGLE-MEASUREMENT apparent rates (production-relevant).')
+    sc8 = sum(1 for d in cls['s'] if d >= 8)     # scratch column at the operating point
+    print('scratch at t=8: %d/16 = %.1f%%' % (sc8, 100.0 * sc8 / 16))
     print('corner channel (independent): 12/15 = 80.0% at any grid limit')
     print('note: tonight good-board floor = 7 (archive floor <= 5): the floor rose')
     print('      with lighting/reference drift, so limits <= 7 sit BELOW the floor.')

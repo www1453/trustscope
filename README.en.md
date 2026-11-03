@@ -3,11 +3,12 @@
 ## 1. What this is
 
 TrustScope is a stop-band incoming-inspection station: two OV5640 sensors feed a Zynq-7020
-(XC7Z020, ALINX AX7020), capture runs at 1280x720, and every decision is made on the bare-metal
-PS — no host PC in the loop. The system answers one question, whether the board can be judged at
-all, and returns three states: **OK**, **NG**, and **cannot judge**; what it cannot judge it
-refuses, never counting it as a pass. The verdict path is auditable: a 160x90 grid, 8x8 px =
-0.4 mm per cell, NG when the cell-mean difference exceeds 30 grey levels and the largest
+(XC7Z020, ALINX AX7020), capture runs at 1280x720; the three-state verdict runs on the bare-metal
+PS on board, and the corner-coverage channel for missing corners runs on the workstation host
+(two-channel design, report §2.3). The system answers one question, whether the board can be
+judged at all, and returns three states: **OK**, **NG**, and **cannot judge**; what it cannot
+judge it refuses, never counting it as a pass. The verdict path is auditable: a 160x90 grid,
+8x8 px = 0.4 mm per cell, NG when the cell-mean difference exceeds 30 grey levels and the largest
 8-connected group covers at least 8 cells. Field results for the whole 111-board work order are
 in the next section.
 
@@ -43,8 +44,11 @@ shipping build ran FCLK_CLK0 at 50.000 MHz with WNS +0.908 ns / TNS 0 / WHS +0.0
 - **PS bare-metal**: [`src/main.c`](src/main.c) (camera, I2C, MMU + D-cache, display, verdict
   loop); the firmware stamp is generated from 13 source files, see [`src/build_id.h`](src/build_id.h).
 - **Conveyor firmware**: [`src/stm32_conveyor_main.c`](src/stm32_conveyor_main.c).
-- **Build and board steps**: this repository carries source and constraints only — no Vivado
-  project, no bitstream, no board scripts. The module list, resources and timing are in report
+- **HLS CNN and build**: [`src/hls/`](src/hls/) (CNN kernel, same-source testbench, HLS driver;
+  **not in the verdict path**) and [`src/build/`](src/build/) (Block Design integration, build and
+  XSA export Tcl; **no bitstream**).
+- **Build and board steps**: this repository carries source, constraints and build Tcl only — no
+  Vivado project, no bitstream, no board scripts. The module list, resources and timing are in report
   §2.3–§2.4 and §6.2; the board sequence (xsdb scripts, register blocks) is recorded in the "上板"
   section of [`docs/HISTORY_20261021.md`](docs/HISTORY_20261021.md) — those `ps_fft_dual/` and
   `ps_ui/` paths come from the 10-21 working tree, are not in this repository, and are kept as a
@@ -69,8 +73,8 @@ What each prints (all of it recomputes to section 2):
   `false-alarm : 3/34 = 8.8% (judgeable) | 3/40 = 7.5% (all)`;
   `main run : NG 6 / UNSTABLE 3 / CANNOT 1 / OK 30` (i.e. the single-run production scope,
   6/40 = 15.0%); per class `pollution 18/25 = 72.0%`, `bent 10/15 = 66.7%`,
-  `corner 12/15 = 80.0%`, `scratch 0/16 = 0.0%%` (the doubled `%` is a typo in the script; the
-  value is 0/16); last line `ledger total: 111 boards = g40 + c25 + b15 + s16 + k15`.
+  `corner 12/15 = 80.0%`, `scratch 0/16 = 0.0%`; last line
+  `ledger total: 111 boards = g40 + c25 + b15 + s16 + k15`.
 - `threshold_sweep_20261103.py` -> the header `t | good FA | pollution | bent | scratch | in-scope det`
   plus 7 rows (t=4..10). Row t=8: good-board false alarms `6/36 = 16.7%`, in-scope detection
   `36/48 = 75.0%`; row t=4: `42/48 = 87.5%` detection against `14/36 = 38.9%` false alarms;

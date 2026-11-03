@@ -147,7 +147,7 @@ def main():
              d_b['NG'], d_b['OK'] + d_b['NG'] + d_b['UNSTABLE']))
     print('  corner    : %d/%d = %.1f%%   (batch5 8/11 + batch6 4/4; borderline B090/B091/B099)'
           % (chip_ng, chip_n, 100.0 * chip_ng / chip_n))
-    print('  scratch   : 0/16 = 0.0%%    (capability boundary, five-dimension falsification)')
+    print('  scratch   : 0/16 = 0.0%    (capability boundary, five-dimension falsification)')
     print()
     print('IN-SCOPE DETECTION (adjudicated, all batches) : %d/%d = %.1f%%'
           % (inscope_ng, inscope_n, 100.0 * inscope_ng / inscope_n))

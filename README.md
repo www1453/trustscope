@@ -2,9 +2,9 @@
 
 ## 1. 这是什么
 
-TrustScope 是一台停带式来料检验工位：双 OV5640 经 PL 采集 1280×720 画面，全部判定在
-Zynq-7020（XC7Z020，ALINX AX7020）的裸机 PS 上完成，不依赖上位机。它只回答一个问题——
-这块板能不能判：输出 **OK / NG / 无法判定** 三态，判不了的一律判“无法判定”，绝不计为合格。
+TrustScope 是一台停带式来料检验工位：双 OV5640 经 PL 采集 1280×720 画面，三态判决在板端
+裸机 PS 完成；缺角的四角覆盖通道在工位控制端运行（两通道设计见报告 §2.3）。它只回答一个
+问题——这块板能不能判：输出 **OK / NG / 无法判定** 三态，判不了的一律判“无法判定”，绝不计为合格。
 判定路径可审计：160×90 格逐格比对，每格 8×8 px = 0.4 mm/格，格均值差 > 30 灰且最大
 8 连通组 ≥ 8 格判 NG。整张作业单 111 块板的实测结果见下一节。
 
@@ -37,7 +37,9 @@ WNS +0.908 ns / TNS 0 / WHS +0.037 ns，未满足约束的端点 0/140,009。
 - **PS 裸机程序**：[`src/main.c`](src/main.c)（相机、I2C、MMU + D-cache、显示、判定主循环）；
   固件戳由 13 个源文件生成，见 [`src/build_id.h`](src/build_id.h)。
 - **传送带侧固件**：[`src/stm32_conveyor_main.c`](src/stm32_conveyor_main.c)。
-- **构建与上板**：本仓库只带源码与约束，**不带 Vivado 工程、比特流、上板脚本**。从零构建的
+- **HLS CNN 与构建**：[`src/hls/`](src/hls/)（CNN 核、同源测试台、HLS 驱动；**不在判决路径上**）、
+  [`src/build/`](src/build/)（Block Design 集成、构建与 XSA 导出 Tcl；**不含比特流**）。
+- **构建与上板**：本仓库只带源码、约束与构建 Tcl，**不带 Vivado 工程、比特流、上板脚本**。从零构建的
   模块清单、资源与时序见报告 §2.3–§2.4 与 §6.2；上板的脚本序列与寄存器块记录在
   [`docs/HISTORY_20261021.md`](docs/HISTORY_20261021.md) 的“上板”一节——那里的 `ps_fft_dual/`、
   `ps_ui/` 路径取自 10-21 工作树，本仓库不含这两个目录，按记录原样保留，不作为本仓库的命令。
@@ -60,8 +62,7 @@ python tools/soak_20261101.py --report       # 10.20 h 连续运行的可靠性�
   `false-alarm : 3/34 = 8.8% (judgeable) | 3/40 = 7.5% (all)`；
   `main run : NG 6 / UNSTABLE 3 / CANNOT 1 / OK 30`（即单次现场口径 6/40 = 15.0%）；
   逐类 `pollution 18/25 = 72.0%`、`bent 10/15 = 66.7%`、`corner 12/15 = 80.0%`、
-  `scratch 0/16 = 0.0%%`（双 `%` 是脚本里的笔误，数值是 0/16）；末行
-  `ledger total: 111 boards = g40 + c25 + b15 + s16 + k15`。
+  `scratch 0/16 = 0.0%`；末行 `ledger total: 111 boards = g40 + c25 + b15 + s16 + k15`。
 - `threshold_sweep_20261103.py` → 表头 `t | good FA | pollution | bent | scratch | in-scope det`
   加 7 行（t=4…10）。t=8 行：良品误报 `6/36 = 16.7%`、能力内检出 `36/48 = 75.0%`；
   t=4 行：检出 `42/48 = 87.5%` 对误报 `14/36 = 38.9%`；收尾 `corner channel (independent): 12/15 = 80.0%`。
@@ -75,7 +76,7 @@ python tools/soak_20261101.py --report       # 10.20 h 连续运行的可靠性�
 
 | 推荐结构 | 本仓库 | 内容 |
 |---|---|---|
-| `src/` | `src/` | PS 裸机 C（`main.c`）、PL 管脚约束（`two_fft.xdc`）、STM32 固件（`stm32_conveyor_main.c`） |
+| `src/` | `src/` | PS 裸机 C（`main.c`）、PL 管脚约束（`two_fft.xdc`）、STM32 固件（`stm32_conveyor_main.c`）、HLS CNN（`hls/`）、构建 Tcl（`build/`） |
 | `sim/` | — | 未分发；离线复算与五维否证见报告 §4 与 `tools/` |
 | `build/` | `tools/` | 复算、阈值扫描、soak 报告、画图脚本 |
 | `board/` | `docs/` | 上板与测量记录（246 份，按日期命名） |

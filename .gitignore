@@ -1,0 +1,21 @@
+﻿# build products and bench scratch
+*.npy
+*.npz
+*.raw
+*.bit
+*.hdf
+*.ltx
+*.dcp
+*.zip
+*.7z
+*.rar
+*.avi
+*.mp4
+backups/
+.tmp/
+_tmp*/
+_broken*/
+*.bak
+__pycache__/
+*.pyc
+.venv*/

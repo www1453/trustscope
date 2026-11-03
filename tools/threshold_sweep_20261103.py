@@ -14,7 +14,11 @@ ASCII only.
 """
 import os
 
-DL = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+# data/ in the published repo, dl/ in the working tree the script was written in.
+DL = next((d for d in (os.path.join(ROOT, 'data'), os.path.join(ROOT, 'dl'), HERE)
+           if os.path.isfile(os.path.join(d, 'qc_all_20261101.csv'))), HERE)
 
 
 def load_main():

@@ -31,7 +31,13 @@ import os
 import sys
 from collections import Counter
 
-DL = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+# The published repo keeps the measured CSVs in data/; the working tree these scripts were
+# written in kept them in dl/.  Resolve by file so `python tools/<this>.py` works from the
+# repo root as the README says, and still works in the working tree.
+DL = next((d for d in (os.path.join(ROOT, 'data'), os.path.join(ROOT, 'dl'), HERE)
+           if os.path.isfile(os.path.join(d, 'qc_all_20261101.csv'))), HERE)
 
 # R5: certified corner verdicts (validated tool, see dl/review_20261031/out/corner_fused_crosscheck.json)
 CORNER_NG = {'B090', 'B091', 'B092', 'B093', 'B094', 'B095', 'B098', 'B100',

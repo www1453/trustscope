@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """soak_20261101.py -- launch the overnight soak and read its result back.
 
-    python dl\\soak_20261101.py --start --hours 7
-    python dl\\soak_20261101.py --report                 # next morning
+    python tools\\soak_20261101.py --start --hours 7
+    python tools\\soak_20261101.py --report                 # next morning
 
 The soak records one row every --period-ms through ONE xsdb connection (see
 ps_fft_dual\\soak_20261101.tcl).  It is read-only: it never writes a mailbox word, never touches the
@@ -28,7 +28,7 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 XSDB = r'D:\Vitis\Vitis\2023.1\bin\xsdb.bat'
 TCL = os.path.join(ROOT, 'ps_fft_dual', 'soak_20261101.tcl')
-DEFAULT_OUT = os.path.join(ROOT, 'dl', 'soak_20261101.csv')
+DEFAULT_OUT = os.path.join(ROOT, 'data', 'soak_20261101.csv')
 
 
 def start(hours, period_ms, out):
@@ -44,7 +44,7 @@ def start(hours, period_ms, out):
               .replace('PERIODMS', str(period_ms)))
     p = os.path.join(ROOT, 'ps_fft_dual', '_soak_run.tcl')
     open(p, 'w', encoding='ascii', newline='\n').write(run)
-    log = os.path.join(ROOT, 'dl', 'soak_20261101.log')
+    log = os.path.join(ROOT, 'data', 'soak_20261101.log')
     fh = open(log, 'w', encoding='utf-8')
     proc = subprocess.Popen([XSDB, p], stdout=fh, stderr=subprocess.STDOUT)
     print('soak started: %d samples over %.1f h at %d ms  ->  %s' % (samples, hours, period_ms, out))

@@ -85,7 +85,7 @@ python tools/soak_20261101.py --report       # 10.20 h 连续运行的可靠性�
 | `README.md` | `README.md` + `README.en.md` | 中英各一 |
 
 
-- **完整设计报告**：[`works_report_20261103d.pdf`](works_report_20261103d.pdf)（25 页；同名 `.docx` 为可编辑稿）。
+- **完整设计报告**：[`works_report_20261103f.pdf`](works_report_20261103f.pdf)（26 页；同名 `.docx` 为可编辑稿）。
 - **日期化工程记录**：[`docs/`](docs/)（246 个文件，按文件名日期排序）。先读
   [`docs/HISTORY_20261021.md`](docs/HISTORY_20261021.md) 顶部的三速率表——18.0 fps / 8.7–10.3 fps /
   约 1.6 次/秒不是同一个量。

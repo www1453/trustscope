@@ -11,8 +11,8 @@ trustscope/
 ├── README.md                     <- 中文主文件（四个区块）
 ├── README.en.md                  <- 英文对照（同四个区块、同数、同标签）
 ├── LICENSE                       <- MIT
-├── works_report_20261103d.pdf    <- 完整设计报告（25 页）
-├── works_report_20261103d.docx   <- 同上，可编辑稿
+├── works_report_20261103f.pdf    <- 完整设计报告（26 页）
+├── works_report_20261103f.docx   <- 同上，可编辑稿
 ├── src/                          <- PS 裸机 main.c、传送带固件、two_fft.xdc、固件戳
 ├── data/                         <- 实测 CSV（逐板判定、连续运行）与现场结果
 ├── docs/                         <- 日期化工程记录（按文件名日期排序）

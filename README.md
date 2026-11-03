@@ -17,6 +17,24 @@ first 30 min — a start-up transient), 1 restart (cause not located; verdicts c
 The report states three limits explicitly: fine scratches pass by design, the CNN is implemented
 but not in the verdict path, and hole/notch inspection is not implemented.
 
+
+## How to reproduce the numbers
+
+Every figure in this repository is recomputable from the data committed with it:
+
+```powershell
+python tools/recompute_field_20261103.py     # per-class detection and false-alarm rates
+python tools/threshold_sweep_20261103.py     # the limit 4-10 operating-point curve
+python tools/soak_20261101.py --report       # the 10.20 h continuous run
+```
+
+**Toolchain:** AMD Vivado / Vitis **2023.1** (hardware design and the bare-metal PS project),
+with the design targeting **XC7Z020 (ALINX AX7020)**. Python 3.11+ with `matplotlib` for the
+figures; the JTAG tools call `xsdb` from the same 2023.1 installation.
+
+**Where to look first:** the full design report is `works_report_20261103d.pdf` (25 pages);
+the dated engineering record is in `docs/` (242 files, ordered by date in the filename).
+
 ```
 trustscope/
 ├── README.md              <- 本文件（含赛题 3.3.5.4 要求的目录对照说明）

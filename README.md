@@ -71,6 +71,19 @@ python tools/soak_20261101.py --report       # 10.20 h 连续运行的可靠性�
 
 ## 4. 导航
 
+**目录对照（赛题 3.3.5.4：本仓库采用与推荐结构不同的组织方式，对照表放在本文件内）**
+
+| 推荐结构 | 本仓库 | 内容 |
+|---|---|---|
+| `src/` | `src/` | PS 裸机 C（`main.c`）、PL 管脚约束（`two_fft.xdc`）、STM32 固件（`stm32_conveyor_main.c`） |
+| `sim/` | — | 未分发；离线复算与五维否证见报告 §4 与 `tools/` |
+| `build/` | `tools/` | 复算、阈值扫描、soak 报告、画图脚本 |
+| `board/` | `docs/` | 上板与测量记录（246 份，按日期命名） |
+| `data/` | `data/` | 现场 CSV、soak 采样、结果表 |
+| `skill/` | `skill/` | 技能包（提示词模板 / 踩坑清单 / 校验脚本） |
+| `README.md` | `README.md` + `README.en.md` | 中英各一 |
+
+
 - **完整设计报告**：[`works_report_20261103d.pdf`](works_report_20261103d.pdf)（25 页；同名 `.docx` 为可编辑稿）。
 - **日期化工程记录**：[`docs/`](docs/)（246 个文件，按文件名日期排序）。先读
   [`docs/HISTORY_20261021.md`](docs/HISTORY_20261021.md) 顶部的三速率表——18.0 fps / 8.7–10.3 fps /

@@ -1,4 +1,4 @@
-# TrustScope
+# 面向平面工件的可信成像质检系统（TrustScope）
 
 ## 1. 这是什么
 

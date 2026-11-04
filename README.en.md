@@ -1,4 +1,4 @@
-# TrustScope
+# TrustScope — a trustworthy-imaging QC system for flat workpieces
 
 ## 1. What this is
 

@@ -1,4 +1,4 @@
-# 上板脚本的唯一权威清单（2026-10-23 建立）
+﻿# 上板脚本的唯一权威清单（2026-10-23 建立）
 
 > 仓库里有 **5 份** `live14_bitpair.tcl`、**22 份** `ps7_init*.tcl`、**15 份** `two_fft.xdc`、**6 份**
 > `stereo_bringup_byname.tcl`。按时间戳挑会挑反：**最新的往往是当天失败的实验**，
@@ -45,12 +45,12 @@
 | `design_1_wrapper_bitpair_50m.bit` | **09-27 live14 用的那份** | `live14_bitpair.tcl:26` 硬编码 |
 | `design_1_wrapper_50m_live14.bit` | 同名变体 | 若干老脚本 |
 
-已经搬到 `C:\Users\wzh\Documents\fpga旧文件\05_旧比特流\` 的（零引用）：`twoFFT.bit`、
+已经搬到 `C:\Users\user\Documents\fpga旧文件\05_旧比特流\` 的（零引用）：`twoFFT.bit`、
 `FFT.bit`×3、`vendor/vendor_pl.bit`、`dl/w6` 的 3 个。
 
 ## 三、哪些脚本**不要**再跑（已知是坏的或已被取代）
 
-**2026-10-23 已全部移出仓库**，归档在 `C:\Users\wzh\Documents\fpga旧文件`，
+**2026-10-23 已全部移出仓库**，归档在 `C:\Users\user\Documents\fpga旧文件`，
 按失败原因分三类，并附 `README.md` 逐条说明：
 
 | 归档目录 | 里面是什么 |

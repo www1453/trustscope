@@ -1,4 +1,4 @@
-# TrustScope — a trustworthy-imaging QC system for flat workpieces
+# TrustScope
 
 ## 1. What this is
 
@@ -33,7 +33,7 @@ but not in the verdict path, and hole/notch inspection is not implemented.
 
 ### 3.1 Toolchain leg: Vivado / Vitis 2023.1
 
-**AMD Vivado / Vitis 2023.1** — used for both the hardware design and the bare-metal PS project
+**AMD Vivado / Vitis 2023.1** - used for both hardware design and the bare-metal PS project. Brief 3.3.3.1 recommends 2026.1 / 2025.2 and requires a report statement + reproducible scripts for other versions: see the report for the statement and [`src/build/`](src/build/) for the reproducible build.
 (the competition requires the version to be stated). Part **XC7Z020 (ALINX AX7020)**; the 10-24
 shipping build ran FCLK_CLK0 at 50.000 MHz with WNS +0.908 ns / TNS 0 / WHS +0.037 ns and
 0 of 140,009 endpoints failing.
@@ -86,14 +86,16 @@ What each prints (all of it recomputes to section 2):
 
 ## 4. Where to look
 
-- **The full report**: [`report/trustscope_report.pdf`](report/trustscope_report.pdf) (26 pages; the
-  `.docx` of the same name is the editable copy).
-- **The dated engineering record**: [`docs/`](docs/) (246 files, ordered by date in the
+- **The full report**: [`trustscope_report.pdf`](report/trustscope_report.pdf) (27 pages, with all
+  measured photos and data).
+- **Post-freeze addendum**: [`docs/REPORT_ADDENDUM_20261104.md`](docs/REPORT_ADDENDUM_20261104.md) (two-state cadence + the precise soak continuity statement).
+- **The dated engineering record**: [`docs/`](docs/) (250 files, ordered by date in the
   filename). Read the three-rate table at the top of
   [`docs/HISTORY_20261021.md`](docs/HISTORY_20261021.md) first — 18.0 fps / 8.7-10.3 fps / about
   1.6 per second are not the same quantity.
 - **Data and figures**: [`data/`](data/) (measured CSV, field results), [`figures/`](figures/)
   (report figures).
 - **Skill package and checks**: [`skill/`](skill/).
+- **AI collaboration record**: [`report/llm_collaboration.md`](report/llm_collaboration.md) + engineering detail [`report/llm_collaboration_evidence.md`](report/llm_collaboration_evidence.md); evidence index [`docs/AI_COLLABORATION_RECORD.md`](docs/AI_COLLABORATION_RECORD.md).
 - **Directory map (selection guide 3.3.5.4)**: [`docs/DIRECTORY_MAP_20261103.md`](docs/DIRECTORY_MAP_20261103.md).
 - **中文版**: [`README.md`](README.md).

@@ -1,4 +1,4 @@
-# Camera 1 exposure vs optics — read-only probe
+﻿# Camera 1 exposure vs optics — read-only probe
 
 **Date** 2026-10-30 ~16:19–16:31 · **Build on board** `TSC19FCEAB62` (ROI) · **Board** good board, station running
 **Method** JTAG `mrd` of the firmware mailbox, plus JTAG-driven **reads only** of the two PS I2C
@@ -253,9 +253,9 @@ or which latch protocol this part wants. What can be said with evidence:
 ## 7. How to replay
 
 ```powershell
-& 'D:\Vitis\Vitis\2023.1\bin\xsdb.bat' 'C:\Users\wzh\Documents\trustscope\ps_fft_dual\cam1exp_20261030.tcl'
-& 'D:\Vitis\Vitis\2023.1\bin\xsdb.bat' 'C:\Users\wzh\Documents\trustscope\ps_fft_dual\cam1exp_i2c_20261030.tcl'
-& 'D:\Vitis\Vitis\2023.1\bin\xsdb.bat' 'C:\Users\wzh\Documents\trustscope\ps_fft_dual\cam1exp_awb_20261030.tcl'
+& 'D:\Vitis\Vitis\2023.1\bin\xsdb.bat' 'C:\Users\user\Documents\trustscope\ps_fft_dual\cam1exp_20261030.tcl'
+& 'D:\Vitis\Vitis\2023.1\bin\xsdb.bat' 'C:\Users\user\Documents\trustscope\ps_fft_dual\cam1exp_i2c_20261030.tcl'
+& 'D:\Vitis\Vitis\2023.1\bin\xsdb.bat' 'C:\Users\user\Documents\trustscope\ps_fft_dual\cam1exp_awb_20261030.tcl'
 ```
 
 Each script re-runs its own controls: build id `TSC19FCEAB62` (the read path carries the live

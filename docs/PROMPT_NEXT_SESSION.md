@@ -1,6 +1,6 @@
-# 给下一个会话的完整提示词（复制粘贴即可）
+﻿# 给下一个会话的完整提示词（复制粘贴即可）
 
-> 项目：`C:\Users\wzh\Documents\trustscope`（Zynq-7020 双相机 PCB 质检）
+> 项目：`C:\Users\user\Documents\trustscope`（Zynq-7020 双相机 PCB 质检）
 > 这份提示词是自包含的：新会话不需要今天的对话记录。
 > 先读这份，再读 `dl/STATE_20261018_1500.md`，然后才开始动手。
 
@@ -20,7 +20,7 @@
 
 **调用方式**：`skill` 工具，`name` 必须精确匹配上表（区分大小写、用连字符）。
 
-**如果 skill 目录里读不到**：`C:\Users\wzh\.dsh\skills\` 下有完整副本（`fpga-casebook`、`fpga-debug-discipline`、`measurement-discipline`、`agent-experiment-discipline`、`xilinx-suite`），可直接读文件。
+**如果 skill 目录里读不到**：`C:\Users\user\.dsh\skills\` 下有完整副本（`fpga-casebook`、`fpga-debug-discipline`、`measurement-discipline`、`agent-experiment-discipline`、`xilinx-suite`），可直接读文件。
 
 ---
 
@@ -172,7 +172,7 @@ MB_TOUCH_OK=87   MB_TAP=92   MB_DEFECT_*（待新增）
 ## 6. 常用命令
 
 ```powershell
-cd C:\Users\wzh\Documents\trustscope\ps_fft_dual
+cd C:\Users\user\Documents\trustscope\ps_fft_dual
 
 # 只跑程序（最常用，不烧比特流）
 xsdb ps_run.tcl

@@ -1,4 +1,4 @@
-# 融合病因与修复记录 · 2026-10-18（最终版）
+﻿# 融合病因与修复记录 · 2026-10-18（最终版）
 
 > 结论先行：**"相位/缓冲差一帧"不是病因，且从未被测量过。** 真正的三个病灶依次是
 > ①arm 太慢（每 3 帧才换一次曝光）②I2C 多字节写会丢 STOP、污染寄存器 ③arm 在帧内的
@@ -79,7 +79,7 @@ arm 原来放在渲染之后，位置随渲染耗时在 82–116 ms 之间移动
 ## 6. 复现命令
 
 ```powershell
-cd C:\Users\wzh\Documents\trustscope\ps_fft_dual
+cd C:\Users\user\Documents\trustscope\ps_fft_dual
 xsdb stereo_bringup_byname.tcl   # 仅在相机卡死/上电后：复位线 + 重写传感器表
 xsdb ps_run.tcl                  # 下载并运行（不烧比特流）
 xsdb ps_probe_now.tcl            # 捕获周期 + 12 次相干配对采样 + 屏上亮度离散

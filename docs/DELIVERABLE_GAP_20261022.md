@@ -1,4 +1,4 @@
-# Deliverable Gap Audit — TrustScope — 2026-10-22 evening
+﻿# Deliverable Gap Audit — TrustScope — 2026-10-22 evening
 
 Scope: read-only audit of the submission package against the nine required upload items.
 Nothing under `submission/` was modified, moved or created. No Vivado / xsdb / board command was run.
@@ -212,7 +212,7 @@ captioned as a working touch panel would contradict the mailbox.
 | Original builder | **not in the repo** — `submission/report/README.md`: "生成脚本为一次性脚本，不随仓库分发" |
 | Incremental editor | `dl/update_report_1021.py` (10,769 B, 2026-10-21 10:25:52) then `dl/fix_report_bold.py` (2026-10-21 10:29:23) |
 | Version line in the doc | "版本：2026-10-21（10-16 基线 + 10-19 至 10-21 的实测增补…）" |
-| Metadata | docx `author`/`last_modified_by` = "TrustScope Project"; PDF author = "TrustScope Project"; **no** `wzh`, no `Users`, no school string in the PDF strings or docx properties |
+| Metadata | docx `author`/`last_modified_by` = "TrustScope Project"; PDF author = "TrustScope Project"; **no** `user`, no `Users`, no school string in the PDF strings or docx properties |
 | Identity claim | para 11: "全文不含任何人员、单位或编号身份信息；这是提交的硬性要求，已在交付前逐字复查。" — **[V] true for the report itself** (docx body+tables+core props and PDF metadata swept; zero hits). The claim is false for the *package as a whole* (see F). |
 | Structural defect | Heading order is `… 九、未完成项与风险` → **`十一、全分辨率（5 MP）…`** → **`十、附录`**. Chapter 11 was inserted before chapter 10 (`dl/update_report_1021.py` inserts before an anchor). A reviewer reading top-to-bottom sees an out-of-order report. |
 | Template compliance | **unverifiable**: 9.5 admits it ("官方模板尚未下载到仓库"); I confirm no template file exists anywhere in the repo (searched `*.docx`/names matching 模板|template). |
@@ -315,23 +315,23 @@ So far the checklist looks right. It is not:
 Registry (HKLM\...\Uninstall):
   DisplayName     : WinRAR 7.20 (64-bit)
   DisplayVersion  : 7.20.0
-  InstallLocation : C:\Users\wzh
-  DisplayIcon     : C:\Users\wzh\WinRAR.exe
-HKLM\SOFTWARE\WinRAR  exe64 = C:\Users\wzh\WinRAR.exe
+  InstallLocation : C:\Users\user
+  DisplayIcon     : C:\Users\user\WinRAR.exe
+HKLM\SOFTWARE\WinRAR  exe64 = C:\Users\user\WinRAR.exe
 
-Test-Path C:\Users\wzh\Rar.exe      -> True   836,304 B   2026-02-02 02:16:53
-Test-Path C:\Users\wzh\WinRAR.exe   -> True 3,420,880 B   2026-02-02 02:17:02
-Test-Path C:\Users\wzh\UnRAR.exe    -> True   560,848 B
-Test-Path C:\Users\wzh\Default.SFX  -> True
-Test-Path C:\Users\wzh\rarext.dll   -> True
+Test-Path C:\Users\user\Rar.exe      -> True   836,304 B   2026-02-02 02:16:53
+Test-Path C:\Users\user\WinRAR.exe   -> True 3,420,880 B   2026-02-02 02:17:02
+Test-Path C:\Users\user\UnRAR.exe    -> True   560,848 B
+Test-Path C:\Users\user\Default.SFX  -> True
+Test-Path C:\Users\user\rarext.dll   -> True
 
-& 'C:\Users\wzh\Rar.exe'
+& 'C:\Users\user\Rar.exe'
   RAR 7.20 x64   Copyright (c) 1993-2026 Alexander Roshal   1 Feb 2026
   Trial version             Type 'rar -?' for help
 ```
 
 **Conclusion: a real RAR writer is installed and runnable.** `Get-Command` misses it because the install is a per-user
-install into `C:\Users\wzh\` which is **not on PATH** — exactly the "measured it the wrong way" failure the project's own
+install into `C:\Users\user\` which is **not on PATH** — exactly the "measured it the wrong way" failure the project's own
 M-discipline warns about (a scan that cannot see the thing it is scanning for).
 
 `[I]` The binaries carry a 2026-02-02 timestamp and an install registry entry, so the install **predates** the 2026-10-16
@@ -343,8 +343,8 @@ checklist. The checklist's "实测：全部未安装" was therefore false when w
   is true but **irrelevant here** — there is no 7-Zip to be tempted by. It is the documented behaviour of 7-Zip, not something
   I measured.
 - `zip.exe` (Info-ZIP, from TeX Live) and `tar.exe` (bsdtar) **cannot** produce RAR. They can only produce zip/tar.
-- **Only `C:\Users\wzh\Rar.exe` can produce a real RAR.** Command shape: `C:\Users\wzh\Rar.exe a -r -m5 <out.rar> <dir>`.
-- **Licence caveat** `[I]`: no `rarreg.key` exists (checked `C:\Users\wzh`, `%APPDATA%\WinRAR`, `C:\Program Files\WinRAR`),
+- **Only `C:\Users\user\Rar.exe` can produce a real RAR.** Command shape: `C:\Users\user\Rar.exe a -r -m5 <out.rar> <dir>`.
+- **Licence caveat** `[I]`: no `rarreg.key` exists (checked `C:\Users\user`, `%APPDATA%\WinRAR`, `C:\Program Files\WinRAR`),
   and the binary self-reports "Trial version". WinRAR is 40-day shareware; an installed copy from 2026-02 is well past that.
   Whether the CLI still creates archives and whether that is acceptable for a competition entry is a **human/legal call**,
   not something I can settle — and I deliberately did **not** create a test archive, because that would have written a file.
@@ -381,7 +381,7 @@ Second lever: `submission/stereo` (26.87 MiB) is mostly evidence PNGs and can be
 
 **Packaging hazard** [V]: `submission/fpga_prize/_pl_rebuild/` is a live Vivado build tree (created 2026-10-22 12:49) sitting
 **inside** the tree that gets archived. Its 64 files include `vivado.jou`, `runme.log`, `.vivado.begin.rst` containing
-`Owner="wzh" Host="LAPTOP-TUME59U3"` and full local paths. A naive `rar a -r submission.rar submission\` will sweep it in.
+`Owner="user" Host="<host>"` and full local paths. A naive `rar a -r submission.rar submission\` will sweep it in.
 It is git-ignored, so it will not reach GitHub, but a RAR built from disk will contain it.
 
 ---
@@ -469,10 +469,10 @@ The checklist names "内部路径（含个人用户名）" as a thing that must 
 
 | Category | Files | Lines | Where |
 |---|---|---|---|
-| `C:\Users\wzh\…` / `C:/Users/wzh/…` | **30** | **1,528** | 15 files / 100 lines in the shipped tree proper; 15 files / 1,428 lines inside `fpga_prize/_pl_rebuild/` |
-| Host name `LAPTOP-TUME59U3` | **18** | **18** | 5 shipped `fpga_prize/docs/design_1_wrapper_*.rpt` reports; 13 in `_pl_rebuild` |
+| `C:\Users\user\…` / `C:/Users/user/…` | **30** | **1,528** | 15 files / 100 lines in the shipped tree proper; 15 files / 1,428 lines inside `fpga_prize/_pl_rebuild/` |
+| Host name `<host>` | **18** | **18** | 5 shipped `fpga_prize/docs/design_1_wrapper_*.rpt` reports; 13 in `_pl_rebuild` |
 
-The 15 shipped-tree files carrying `wzh` paths (excluding `_pl_rebuild`):
+The 15 shipped-tree files carrying `user` paths (excluding `_pl_rebuild`):
 
 ```
 board/RESTORE.md                        build/run_diag4.tcl               build/stereo_recon2.tcl
@@ -483,21 +483,21 @@ build/ps_boxbase.tcl                    build/ps_run.tcl                  report
 ```
 
 Worst single line [V]: `submission/video/README.md:50` reproduces the full ffmpeg command line including
-`C:\Users\wzh\Documents\trustscope\submission\video\_frames\f%05d.png` — i.e. the **delivery documentation for the video**
+`C:\Users\user\Documents\trustscope\submission\video\_frames\f%05d.png` — i.e. the **delivery documentation for the video**
 prints the personal path. `submission/report/hardware_safety.md:1558` does the same with
-`C:\Users\wzh\Documents\zynq 文献\AN970_UG.pdf`.
+`C:\Users\user\Documents\zynq 文献\AN970_UG.pdf`.
 
 Severity assessment [I]: these are not school identity, and build scripts with absolute paths are normal engineering practice.
-But the rule as written ("内部路径（含个人用户名）") makes them violations, and `wzh` is a username that appears 1,528 times.
+But the rule as written ("内部路径（含个人用户名）") makes them violations, and `user` is a username that appears 1,528 times.
 A judge who greps for the entrant's identity will find it instantly. The honest reading is: **F1–F3 are the disqualifying class;
 F.3 is the "will be noticed and looks careless" class.** Both should be fixed before the RAR is built, and the
 `_pl_rebuild` subtree should not be shipped at all (it alone is 1,428 of the 1,528 path hits).
 
 ### F.4 What is clean
 
-- `submission/report/technical_report.docx` — body and tables: **0** hits for 学校/大学/学院/导师/wzh/Users/论文.
-- `submission/report/technical_report.pdf` — **0** hits for `wzh`/`Users` in the raw bytes; PDF metadata author = "TrustScope Project".
-- `submission/video/STORYBOARD.md` — the targeted sweep found no school/identity string (its `wzh` exposure is in the sibling
+- `submission/report/technical_report.docx` — body and tables: **0** hits for 学校/大学/学院/导师/user/Users/论文.
+- `submission/report/technical_report.pdf` — **0** hits for `user`/`Users` in the raw bytes; PDF metadata author = "TrustScope Project".
+- `submission/video/STORYBOARD.md` — the targeted sweep found no school/identity string (its `user` exposure is in the sibling
   `README.md`, not the storyboard).
 - No non-ASCII filenames anywhere under `submission/` [V] — the competition's `3.3.5.4` naming rule is satisfied.
 
@@ -519,7 +519,7 @@ Ordered by "what unblocks the most with the least risk", not by effort.
 3. **Decide and act on `demo.avi`.** Excluding it drops the RAR from ~123 MiB to ~12 MiB and removes 111 MiB of non-required
    evidence. If the hand-written-RIFF proof is worth keeping, keep it in the repo but not in the upload archive.
    Also exclude `submission/fpga_prize/_pl_rebuild/` (build tree + 1,428 personal-path lines) from any archive explicitly.
-4. **Build the RAR with the installed WinRAR** — `C:\Users\wzh\Rar.exe a -r -m5 <out>.rar submission\` — after steps 1–3.
+4. **Build the RAR with the installed WinRAR** — `C:\Users\user\Rar.exe a -r -m5 <out>.rar submission\` — after steps 1–3.
    The checklist's "cannot make RAR" blocker is false; delete that claim from the checklist and from report §9.5 (T5).
    Confirm the licence situation with the human (Trial version, no key file).
 5. **Update the report's contradictions** (T1 is the priority: delete "控制器已应答…"; then T2/T3 add "CNN is switched off
@@ -573,8 +573,8 @@ Get-ChildItem . -Filter *.zip | Sort Length -Desc
 Get-Command rar,winrar,7z,7za,7zr,7zG
 Test-Path 'C:\Program Files\7-Zip','C:\Program Files\WinRAR','C:\Program Files (x86)\7-Zip','C:\Program Files (x86)\WinRAR'
 Get-ItemProperty HKLM:\SOFTWARE\...\Uninstall\* | ? DisplayName -match 'WinRAR|7-Zip'
-Test-Path C:\Users\wzh\Rar.exe
-& 'C:\Users\wzh\Rar.exe'      # -> "RAR 7.20 x64 ... Trial version"
+Test-Path C:\Users\user\Rar.exe
+& 'C:\Users\user\Rar.exe'      # -> "RAR 7.20 x64 ... Trial version"
 
 # git
 git remote -v                 # -> empty

@@ -1,16 +1,23 @@
-# 构建 Tcl
+# 构建 Tcl（Vivado 2023.1）
 
-本目录是 2026-10 出货比特流的构建脚本，**不含比特流**（`.bit` 有数 MB，由 `.gitignore` 排除）。
-出货比特流来自 2026-10-24 的构建：DSP 219/220、BRAM 138.5/140、WNS +0.908 ns；
-生成后位于 `<Vivado 工程>/two FFT.runs/impl_1/design_1_wrapper.bit`。
+**先跑**：`vivado -mode batch -source src/build/verify_env.tcl`（0=输入齐全，1=缺，逐条打印缺什么）
 
-- `cnn_integrate.tcl`：把 `src/hls/` 导出的 `ts_cnn_top` IP 集成进 `design_1` Block Design
-  （地址 0x43C20000 / 0x43C30000）；改完先 validate 再 save。
-- `batch_build.tcl`：重生成 BD 产物 → 重置全部 run → 综合 → 实现 → 比特流 →
-  `write_hw_platform` 导出 XSA。
-- `cnn_build.tcl`：CNN 集成后的构建（wrapper → 综合 → 实现 → 比特流），不导出 XSA。
+## 本仓库**没有**分发的东西
 
-**怎么构建**：用 Vivado 2023.1 打开厂商 AX7020 双相机基础工程（本机为 `two FFT.xpr`），
-先按脚本顶部改 `XPR` / `XSA` / `SRCD` 等绝对路径，再依次执行
-`vivado -mode batch -source cnn_integrate.tcl`、`vivado -mode batch -source batch_build.tcl`。
-脚本里的绝对路径取自 10-21 工作树，只为记录，换机器必须改。
+| 缺什么 | 为什么 | 怎么补 |
+|---|---|---|
+| Vivado 工程 `.xpr` | 厂商 ALINX 板级文件与生成的 IP 产物不随包分发 | 新建工程 → `source src/build/bd/design_1_bd.tcl` 重建 BD → 加 `src/two_fft.xdc` → 跑下面 2–5 |
+| `capture_ram.v`/`analyzer_fe.v`/`spi_gen.v` 等 module_ref 源 | 同上（BD 按模块名引用） | 先入工程，或设 `TRUSTSCOPE_RTL` |
+| `FFT.xsa`、`.bit` | XSA 是构建**产物**，比特流数 MB 被 `.gitignore` 排除 | 由构建生成 |
+
+**已在仓库里**：`bd/design_1_bd.tcl`（整流设计 Tcl 重放）、`src/two_fft.xdc`（引脚约束）。
+
+## 顺序（在包根执行）
+
+1. `set TRUSTSCOPE_XPR=<你的工程>.xpr`
+2. `vivado -mode batch -source src/hls/run_hls.tcl`（`TS_HLS_MODE=csynth`）
+3. `vivado -mode batch -source src/hls/export_ip.tcl` → 打包 `ts_cnn_top`
+4. `vivado -mode batch -source src/build/cnn_integrate.tcl`
+5. `vivado -mode batch -source src/build/batch_build.tcl`（综合→实现→比特流→XSA）
+
+脚本内**无绝对路径**：全部由 `[info script]` 推导包根，可用 `TRUSTSCOPE_XPR/XSA/RTL/IPREPO/LOG/RUNS` 覆盖，日志在 `<包根>/build_logs/`。`cnn_build.tcl` 是第 5 步不导 XSA 的轻量版。出货比特流（2026-10-24）：DSP 219/220、BRAM 138.5/140、WNS +0.908 ns。

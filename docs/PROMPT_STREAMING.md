@@ -1,4 +1,4 @@
-# 新会话启动提示词（流式 RTL / 流式 HLS 内核重写）
+﻿# 新会话启动提示词（流式 RTL / 流式 HLS 内核重写）
 
 > 用法：**整段复制下面代码块里的内容**，粘贴到新会话的第一条消息。不要改里面的路径。
 > 提示词已经做了三件事：指定先读哪些文件、把纪律写死、给出停止判据。
@@ -9,7 +9,7 @@
 ```
 本次任务：执行 trustscope/dl/STREAMING_KERNEL_SPEC.md 里的流式内核重写，从第 1 步开始，一步一综合。
 
-工作目录：C:\Users\wzh\Documents\trustscope\dl
+工作目录：C:\Users\user\Documents\trustscope\dl
 
 开工前必须按顺序读完，不许跳：
 1. HANDOFF.md               —— 现状、已被推翻的 15 条假设、环境坑

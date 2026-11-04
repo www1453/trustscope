@@ -1,4 +1,4 @@
-# 交付包：当前上板状态（2026-10-18 20:50）
+﻿# 交付包：当前上板状态（2026-10-18 20:50）
 
 这份包里的东西就是**此刻板子上跑的那一套**。先看"怎么跑"，再看"已知问题"。
 
@@ -7,7 +7,7 @@
 ## 一、怎么跑（按顺序，别跳）
 
 ```powershell
-cd C:\Users\wzh\Documents\trustscope
+cd C:\Users\user\Documents\trustscope
 
 # 1) 换/烧比特流之前，必须先让 PL 变空白（否则面板会锁存成条纹）
 cd ps_fft_dual

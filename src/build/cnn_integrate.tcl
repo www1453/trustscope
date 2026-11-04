@@ -1,5 +1,12 @@
 # cnn_integrate.tcl -- 把经过验证的 v12 CNN IP 集成进 AX7020 的 Block Design。
 #
+# 本仓库不含 Vivado 工程（.xpr）与 module_ref 的 .v 源文件。路径全部由本文件
+# 位置推导，可用环境变量覆盖（不写死任何机器路径）：
+#   TRUSTSCOPE_XPR    工程 .xpr，默认 <root>/hw/two_fft/two FFT.xpr（包内不存在）
+#   TRUSTSCOPE_IPREPO 已打包的 ts_cnn_top IP 目录，默认
+#                     <root>/src/hls/hls_proj/sol1/impl/ip（即 export_ip.tcl 的产物）
+#   TRUSTSCOPE_LOG    日志目录，默认 <root>/build_logs
+#
 # 纪律（每一条都来自本项目付过代价的失败）
 #   1. **改前备份**：调用方必须先跑 dl/backup.py save（BD 与 .xpr）
 #   2. **不猜端口名**：从 component.xml 现场读，参考设计的端口名属于另一个打包版本
@@ -14,27 +21,50 @@
 #   0x43C00000 已被 v_tc_0 占用      -> CNN 用 0x43C20000 / 0x43C30000
 #   FCLK_CLK0 = 50 MHz                -> CNN 实际跑 50 MHz（约 14.4 ms/次）
 #
-# usage: vivado -mode batch -source cnn_integrate.tcl
-set LOG "C:/Users/wzh/Documents/trustscope/ps_fft_dual/logs/cnn_integrate.log"
-set PROJ "D:/BaiduNetdiskDownload/23_ov5640_dual/Vivado/two FFT/two FFT.xpr"
-set IPREPO "C:/Users/wzh/Documents/trustscope/dl/hls/ip_v12_verified"
+# usage: vivado -mode batch -source src/build/cnn_integrate.tcl
+set ROOT [file normalize [file join [file dirname [info script]] .. ..]]
+
+proc ENV {name def} {
+    if {[info exists ::env($name)] && [string trim $::env($name)] ne ""} {
+        return [string trim $::env($name)]
+    }
+    return $def
+}
+proc RESOLVE {p base} {
+    if {[file pathtype $p] eq "absolute"} { return $p }
+    return [file join $base $p]
+}
+
+set LOGDIR [RESOLVE [ENV TRUSTSCOPE_LOG [file join $ROOT build_logs]] $ROOT]
+set LOG    [file join $LOGDIR cnn_integrate.log]
+set PROJ   [RESOLVE [ENV TRUSTSCOPE_XPR [file join $ROOT hw two_fft "two FFT.xpr"]] $ROOT]
+set IPREPO [RESOLVE [ENV TRUSTSCOPE_IPREPO [file join $ROOT src hls hls_proj sol1 impl ip]] $ROOT]
+file mkdir $LOGDIR
 set _fh [open $LOG w]
 proc L {m} { puts $m; global _fh; puts $_fh $m; flush $_fh }
-proc FATAL {m} { L "*** FATAL: $m"; close [open "C:/Users/wzh/Documents/trustscope/ps_fft_dual/logs/_fail" w]; exit 3 }
+proc FATAL {m} { L "*** FATAL: $m"; global LOGDIR; close [open [file join $LOGDIR _fail] w]; exit 3 }
 proc CHK {cond msg} { if {![uplevel 1 [list expr $cond]]} { FATAL $msg } else { L "  OK  $msg" } }
 
 L "=========== CNN integrate ==========="
+L "root   = $ROOT"
+L "proj   = $PROJ"
+L "iprepo = $IPREPO"
+if {![file exists $PROJ]} {
+    FATAL "no Vivado project at $PROJ (the .xpr is not distributed -- set TRUSTSCOPE_XPR, or rebuild the BD from src/build/bd/design_1_bd.tcl)"
+}
+if {![file exists [file join $IPREPO component.xml]]} {
+    FATAL "no packed IP at $IPREPO/component.xml (run src/hls/run_hls.tcl csynth + export_ip.tcl first, or set TRUSTSCOPE_IPREPO)"
+}
 open_project $PROJ
 open_bd_design [get_files -quiet design_1.bd]
 set BD [current_bd_design]
 L "  BD = $BD"
 
 # ---------------------------------------------------------------- 0) 备份闸门
-set BK [file dirname $LOG]
-foreach f {"D:/BaiduNetdiskDownload/23_ov5640_dual/Vivado/two FFT/two FFT.srcs/sources_1/bd/design_1/design_1.bd"} {
-    if {![file exists $f]} { FATAL "找不到 $f" }
-}
-L "  前置检查通过（BD 存在）"
+set BK $LOGDIR
+set bdlist [get_files -quiet design_1.bd]
+if {[llength $bdlist] == 0} { FATAL "工程里没有 design_1.bd" }
+L "  前置检查通过（BD 存在: [lindex $bdlist 0]）"
 
 # ---------------------------------------------------------------- 1) IP 仓库
 L ""

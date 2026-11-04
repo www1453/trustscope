@@ -1261,7 +1261,7 @@ print("  恢复 %s  %s" % (r, "OK" if got == h else "*** 校验不符 ***"))
   3. **证明它确实不受版本控制**：`git ls-files --error-unmatch "<bd 路径>"`。本次的失败信息是
 
      ```
-     fatal: D:/.../design_1.bd: 'D:/...' is outside repository at 'C:/Users/wzh/Documents/trustscope'
+     fatal: D:/.../design_1.bd: 'D:/...' is outside repository at 'C:/Users/<user>/Documents/trustscope'
      ```
      退出码 128。这比"未被跟踪"更强：**这个路径根本不在仓库里**，所以 `git` 连"跟踪与否"
      都无从谈起 —— `git status` 干净与它无关。`git check-ignore -v` 同样报不在仓库内。

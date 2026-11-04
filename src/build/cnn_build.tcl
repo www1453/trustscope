@@ -1,16 +1,50 @@
 # cnn_build.tcl -- 集成后的构建：wrapper -> 综合 -> 实现 -> 比特流。
 #
+# 本仓库不含 Vivado 工程（.xpr）：厂商板级文件与生成的 IP 产物没有随包分发。
+# 脚本不再写死任何绝对路径，全部由本文件位置推导，可用环境变量覆盖：
+#   TRUSTSCOPE_XPR  工程 .xpr，默认 <root>/hw/two_fft/two FFT.xpr（包内不存在）
+#   TRUSTSCOPE_XSA  XSA，默认 <root>/src/build/FFT.xsa
+#   TRUSTSCOPE_LOG  日志目录，默认 <root>/build_logs
+#   TRUSTSCOPE_RTL  module_ref 的 .v 源目录，默认 <root>/src/rtl（包内不存在）
+# 说明见同目录 README.md。
+#
 # 纪律
 #   * 每一步等 run 真正结束再继续（launch_runs 是异步的，wait_on_run 必须调）
 #   * PROGRESS 不是 100% 就判失败，**不把"没跑完"当成"跑过了"**
 #   * 报告资源与违反路径数，供事后核对
 #   * ASCII ONLY
 #
-# usage: vivado -mode batch -source cnn_build.tcl
-set LOG "C:/Users/wzh/Documents/trustscope/ps_fft_dual/logs/cnn_build.log"
-set PROJ "D:/BaiduNetdiskDownload/23_ov5640_dual/Vivado/two FFT/two FFT.xpr"
+# usage: vivado -mode batch -source src/build/cnn_build.tcl
+set ROOT [file normalize [file join [file dirname [info script]] .. ..]]
+
+proc ENV {name def} {
+    if {[info exists ::env($name)] && [string trim $::env($name)] ne ""} {
+        return [string trim $::env($name)]
+    }
+    return $def
+}
+proc RESOLVE {p base} {
+    if {[file pathtype $p] eq "absolute"} { return $p }
+    return [file join $base $p]
+}
+
+set LOGDIR [RESOLVE [ENV TRUSTSCOPE_LOG [file join $ROOT build_logs]] $ROOT]
+set LOG    [file join $LOGDIR cnn_build.log]
+set PROJ   [RESOLVE [ENV TRUSTSCOPE_XPR [file join $ROOT hw two_fft "two FFT.xpr"]] $ROOT]
+set RUNS   [RESOLVE [ENV TRUSTSCOPE_RUNS [file rootname $PROJ].runs] $ROOT]
+file mkdir $LOGDIR
 set _fh [open $LOG w]
 proc L {m} { puts $m; global _fh; puts $_fh $m; flush $_fh }
+
+L "root = $ROOT"
+L "proj = $PROJ"
+if {![file exists $PROJ]} {
+    L "*** FATAL: no Vivado project at $PROJ"
+    L "*** the .xpr is not distributed -- set TRUSTSCOPE_XPR or rebuild the BD"
+    L "*** from src/build/bd/design_1_bd.tcl (see README.md)"
+    close $_fh
+    exit 1
+}
 
 L "=========== CNN build ==========="
 open_project $PROJ
@@ -67,11 +101,12 @@ L "  WHS = $whs ns"
 set viol [get_msg_config -count -severity {CRITICAL WARNING}]
 L "  CRITICAL WARNING 计数 = $viol"
 
-set rpt "C:/Users/wzh/Documents/trustscope/ps_fft_dual/logs/cnn_util.rpt"
+set rpt [file join $LOGDIR cnn_util.rpt]
+file mkdir [file dirname $rpt]
 report_utilization -file $rpt
 L "  资源报告 -> $rpt"
 
-set bit "D:/BaiduNetdiskDownload/23_ov5640_dual/Vivado/two FFT/two FFT.runs/impl_1/design_1_wrapper.bit"
+set bit [file join $RUNS impl_1 design_1_wrapper.bit]
 if {[file exists $bit]} {
     L "  比特流: $bit  ([file size $bit] bytes)"
 } else {

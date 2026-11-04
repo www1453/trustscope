@@ -32,6 +32,24 @@ set part "xc7z020_clg400"
 set top  "ts_cnn_top"
 set work "hls_proj"
 
+# --- input discovery: same directory layout as this clone -------------------
+# The repository ships src/hls/ts_cnn.cpp and src/hls/tb_cnn.cpp FLAT (no src/
+# or tb/ subdirectory), and it does NOT ship the test vectors
+# data/params.bin + data/vectors.bin. Both layouts are accepted so the script
+# works from a clone and from the original working tree.
+proc FIRST {cands} {
+    foreach c $cands { if {[file exists $c]} { return $c } }
+    return ""
+}
+set SRC  [FIRST [list [file join $script_dir src ts_cnn.cpp] [file join $script_dir ts_cnn.cpp]]]
+set TB   [FIRST [list [file join $script_dir tb tb_cnn.cpp] [file join $script_dir tb_cnn.cpp]]]
+set PDIR [FIRST [list [file join $script_dir data] [file join $script_dir .. .. data] "data"]]
+set POK 0
+if {$PDIR ne ""} {
+    if {[file exists [file join $PDIR params.bin]] && [file exists [file join $PDIR vectors.bin]]} { set POK 1 }
+}
+T "src=$SRC tb=$TB data=$PDIR vectors_ok=$POK"
+
 set mode "csim"
 # NOTE: the variable is TS_HLS_MODE, not HLS_MODE. Vitis HLS has its OWN
 # HLS_MODE variable (it read "tcl" on 2026-09-24), so the first version of this
@@ -50,18 +68,28 @@ if {[catch {
     set_top $top
     T "  ok"
 
-    T "add_files src/ts_cnn.cpp"
-    add_files src/ts_cnn.cpp
+    if {$SRC eq ""} { T "FATAL ts_cnn.cpp not found next to this script"; exit 1 }
+    T "add_files $SRC"
+    add_files $SRC
     T "  ok"
 
-    T "add_files -tb tb/tb_cnn.cpp"
-    add_files -tb tb/tb_cnn.cpp
-    T "  ok"
+    if {$TB ne ""} {
+        T "add_files -tb $TB"
+        add_files -tb $TB
+        T "  ok"
+    } else {
+        T "WARN tb_cnn.cpp not found -- csim will be unavailable"
+    }
 
-    T "add_files -tb data/params.bin + vectors.bin"
-    add_files -tb data/params.bin
-    add_files -tb data/vectors.bin
-    T "  ok"
+    if {$POK} {
+        T "add_files -tb $PDIR/params.bin + vectors.bin"
+        add_files -tb [file join $PDIR params.bin]
+        add_files -tb [file join $PDIR vectors.bin]
+        T "  ok"
+    } else {
+        T "NOTE test vectors (params.bin / vectors.bin) are NOT distributed"
+        T "     csynth/export_ip work; csim cannot run without them"
+    }
 
     T "open_solution -reset sol1"
     open_solution -reset "sol1"
@@ -88,7 +116,13 @@ if {[catch {
         #   Windows, which is what the toolchain wants.
         #   (The testbench also writes a hard-coded relative "data/trace_c.bin",
         #   but only when argv[2] == "dump"; this script never passes that.)
-        set data_abs [file normalize "$script_dir/data"]
+        set data_abs [file normalize $PDIR]
+        if {!$POK} {
+            T "FATAL csim needs data/params.bin + data/vectors.bin, which this"
+            T "      repository does not distribute. Run with TS_HLS_MODE=csynth."
+            close $tr
+            exit 2
+        }
         T "csim data dir (absolute): $data_abs"
         T "csim_design -argv $data_abs"
         csim_design -argv $data_abs

@@ -1,4 +1,4 @@
-# 交接 2026-10-22 深夜（覆盖 EVENING 那份里有冲突的说法）
+﻿# 交接 2026-10-22 深夜（覆盖 EVENING 那份里有冲突的说法）
 
 > 板子主链路仍然好的（实测 19.0 fps）。触屏**没修好**，但换掉了两个错误归因，
 > 并把真正的判别点缩小到"FPGA 里跑的到底是哪一版比特流"。
@@ -14,7 +14,7 @@
 | "根因是 BD 丢了 `C_TRI_ENABLE`"（本轮我先提出、又自己推翻） | axi_gpio v2.0 **没有**这个参数；用交付配置生成 IP，RTL 里 `gpio_io_t/i` 都在；wrapper 里 `tri_t` 已接到 IOBUF 的 T | **撤回**，见 §7.1 / §8.2 |
 | "触屏只能靠固件自己发布状态" | 对。JTAG 读 PL 被 DAP 明确拒绝（`PL AXI slave ports access is not allowed`） | 保留 |
 | "11/4 交付物 一个都没做" | 报告 docx/pdf、demo.mp4、MANIFEST、三个 zip 都在（10-16～10-21） | **改正**，见 `dl/DELIVERABLE_GAP_20261022.md` |
-| "没有 RAR 工具" | `C:\Users\wzh\Rar.exe`（RAR 7.20 x64，试用）已安装，只是不在 PATH | **改正** |
+| "没有 RAR 工具" | `C:\Users\user\Rar.exe`（RAR 7.20 x64，试用）已安装，只是不在 PATH | **改正** |
 | 视频上限 "5 分钟/500MB" | 提交清单写的是 **≤3 分钟/≤300MB** | 以清单为准 |
 | `master 最新 4b53359` | HEAD 是 `1b72ab8` | 改正 |
 

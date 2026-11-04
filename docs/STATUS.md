@@ -18,24 +18,24 @@
 
 ---
 
-## 浜屻€佸彲澶嶇幇鍛戒护锛堥兘鍦?`C:\Users\wzh\Documents\trustscope\dl`锛?
+## 浜屻€佸彲澶嶇幇鍛戒护锛堥兘鍦?`C:\Users\user\Documents\trustscope\dl`锛?
 ### 涓绘満渚э紙绉掔骇锛屽厛鍋氳繖涓級
 ```powershell
-cd C:\Users\wzh\Documents\trustscope\dl\hls
+cd C:\Users\user\Documents\trustscope\dl\hls
 $gpp='D:\Vitis\Vitis_HLS\2023.1\tps\mingw\8.3.0\win64.o\nt\bin\g++.exe'
 & $gpp -std=c++11 -O2 -o tb_cnn.exe tb\tb_cnn.cpp src\ts_cnn.cpp
 .\tb_cnn.exe data            # 鏈熸湜锛歭ogits bit-exact rows 200/200
 ```
 
 ### HLS 缁煎悎锛?*蹇呴』鍓嶅彴璺?*锛岃鍧?3锛?```powershell
-cd C:\Users\wzh\Documents\trustscope\dl\hls
+cd C:\Users\user\Documents\trustscope\dl\hls
 $env:TS_HLS_MODE='csynth'
 & .\run_hls_nopipe.bat -f run_hls.tcl
 # 鎶ュ憡锛歨ls_proj\sol1\syn\report\ts_cnn_top_csynth.rpt
 # 杩涘害锛歨ls_trace.txt锛堣剼鏈嚜宸卞啓鐨勶紝鍥犱负鎺у埗鍙版浘鏁存涓㈠け锛?```
 
 ### Python 渚?```powershell
-cd C:\Users\wzh\Documents\trustscope\dl
+cd C:\Users\user\Documents\trustscope\dl
 python build_dataset.py      # 鏁版嵁闆?python train_cnn.py --epochs 40 --tag cnn_v1
 python quality_metrics.py    # 璐ㄩ噺鐗瑰緛 + 闂?python quantize.py           # 閲忓寲 + 瀵煎嚭
 python verify_export.py      # 瀵煎嚭鍖呭鏍革紙蹇呴』 PASS锛?python export_for_hls.py     # 鐢熸垚 C 鍙鐨?params.bin / vectors.bin

@@ -1,4 +1,4 @@
-# 面向平面工件的可信成像质检系统（TrustScope）
+# TrustScope
 
 ## 1. 这是什么
 
@@ -28,7 +28,7 @@ but not in the verdict path, and hole/notch inspection is not implemented.
 
 ### 3.1 工具链腿：Vivado / Vitis 2023.1
 
-**AMD Vivado / Vitis 2023.1** —— 硬件设计与 PS 裸机工程都用这个版本（本竞赛要求写明版本）。
+**AMD Vivado / Vitis 2023.1** —— 硬件设计与 PS 裸机工程都用这个版本。赛纲 3.3.3.1 推荐 2026.1 / 2025.2，并要求其他版本在报告中说明且脚本可复现：版本声明见报告，可复现构建见 [`src/build/`](src/build/)。
 器件 **XC7Z020（ALINX AX7020）**；10-24 出货构建 FCLK_CLK0 50.000 MHz，
 WNS +0.908 ns / TNS 0 / WHS +0.037 ns，未满足约束的端点 0/140,009。
 
@@ -79,17 +79,20 @@ python tools/soak_20261101.py --report       # 10.20 h 连续运行的可靠性�
 | `src/` | `src/` | PS 裸机 C（`main.c`）、PL 管脚约束（`two_fft.xdc`）、STM32 固件（`stm32_conveyor_main.c`）、HLS CNN（`hls/`）、构建 Tcl（`build/`） |
 | `sim/` | — | 未分发；离线复算与五维否证见报告 §4 与 `tools/` |
 | `build/` | `tools/` | 复算、阈值扫描、soak 报告、画图脚本 |
-| `board/` | `docs/` | 上板与测量记录（246 份，按日期命名） |
+| `board/` | `docs/` | 上板与测量记录（250 份，按日期命名） |
 | `data/` | `data/` | 现场 CSV、soak 采样、结果表 |
 | `skill/` | `skill/` | 技能包（提示词模板 / 踩坑清单 / 校验脚本） |
+| `report/` | `report/` | 设计报告（`trustscope_report.pdf`）+ 大模型协作记录（`llm_collaboration.md`、`llm_collaboration_evidence.md`） |
 | `README.md` | `README.md` + `README.en.md` | 中英各一 |
 
 
-- **完整设计报告**：[`report/trustscope_report.pdf`](report/trustscope_report.pdf)（26 页；同名 `.docx` 为可编辑稿）。
-- **日期化工程记录**：[`docs/`](docs/)（246 个文件，按文件名日期排序）。先读
+- **完整设计报告**：[`trustscope_report.pdf`](report/trustscope_report.pdf)（27 页，含全部实测照片与数据）。
+- **提交后勘误与补充**：[`docs/REPORT_ADDENDUM_20261104.md`](docs/REPORT_ADDENDUM_20261104.md)（节拍两态 + soak 不连续的准确表述）。
+- **日期化工程记录**：[`docs/`](docs/)（250 个文件，按文件名日期排序）。先读
   [`docs/HISTORY_20261021.md`](docs/HISTORY_20261021.md) 顶部的三速率表——18.0 fps / 8.7–10.3 fps /
   约 1.6 次/秒不是同一个量。
 - **数据与图**：[`data/`](data/)（实测 CSV、现场结果）、[`figures/`](figures/)（报告插图）。
 - **技能包与检查脚本**：[`skill/`](skill/)。
+- **大模型协作记录**：正文 [`report/llm_collaboration.md`](report/llm_collaboration.md) + 工程细节 [`report/llm_collaboration_evidence.md`](report/llm_collaboration_evidence.md)；证据索引 [`docs/AI_COLLABORATION_RECORD.md`](docs/AI_COLLABORATION_RECORD.md)（赛纲 3.3.5.3）。
 - **目录对照（选题指南 3.3.5.4）**：[`docs/DIRECTORY_MAP_20261103.md`](docs/DIRECTORY_MAP_20261103.md)。
 - **English version**：[`README.en.md`](README.en.md)。

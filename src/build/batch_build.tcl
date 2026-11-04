@@ -1,6 +1,24 @@
 # ============================================================================
 # batch_build.tcl -- regenerate BD outputs, synth, impl, bitstream, export XSA
-#   usage: vivado -mode batch -source batch_build.tcl
+#   usage: vivado -mode batch -source src/build/batch_build.tcl
+#
+# INPUTS THIS REPOSITORY DOES *NOT* CONTAIN
+#   This repo ships text sources, not a Vivado project. Three inputs are
+#   therefore absent and must be supplied before this script can run:
+#     *.xpr  the Vivado project file. Not distributed: it embeds the ALINX
+#            vendor board files and the generated IP products, and it points
+#            at a machine-local IP cache. Supply it with TRUSTSCOPE_XPR.
+#            It can be recreated: src/build/bd/design_1_bd.tcl rebuilds the
+#            Block Design in a fresh project, and src/two_fft.xdc carries the
+#            pin constraints.
+#     *.v    the module_ref RTL the BD points at (capture_ram.v, analyzer_fe.v,
+#            spi_gen.v, alinx_ov5640.v ...). Not distributed either. Set
+#            TRUSTSCOPE_RTL to the directory that holds them.
+#     *.xsa  FFT.xsa is an OUTPUT of this script. It is only an input to the
+#            Vitis side, never a hard requirement here.
+#   Every path below is derived from this file's own location, so a clone at
+#   any directory works. Override with the env vars named next to the defaults.
+# ============================================================================
 #
 # WHY EVERY RUN IS RESET
 # ----------------------
@@ -24,7 +42,22 @@
 # non-ASCII bytes can eat quotes/braces and cause unrelated syntax errors.
 # ============================================================================
 
-set LOGFILE "C:/Users/wzh/Documents/trustscope/ps_fft_dual/logs/build.log"
+# --- path policy: script location first, environment variable second -------
+set ROOT [file normalize [file join [file dirname [info script]] .. ..]]
+
+proc ENV {name def} {
+    if {[info exists ::env($name)] && [string trim $::env($name)] ne ""} {
+        return [string trim $::env($name)]
+    }
+    return $def
+}
+proc RESOLVE {p base} {
+    if {[file pathtype $p] eq "absolute"} { return $p }
+    return [file join $base $p]
+}
+
+# TRUSTSCOPE_LOG  default <root>/build_logs/build.log
+set LOGFILE [RESOLVE [ENV TRUSTSCOPE_LOG [file join $ROOT build_logs build.log]] $ROOT]
 file mkdir [file dirname $LOGFILE]
 set _lfh [open $LOGFILE w]
 proc L {msg} {
@@ -33,10 +66,23 @@ proc L {msg} {
     if {[info exists _lfh]} { puts $_lfh $msg; flush $_lfh }
 }
 
-set XPR  "D:/BaiduNetdiskDownload/23_ov5640_dual/Vivado/two FFT/two FFT.xpr"
-set XSA  "C:/Users/wzh/Documents/vitis/xsa/FFT.xsa"
-set RUNS "D:/BaiduNetdiskDownload/23_ov5640_dual/Vivado/two FFT/two FFT.runs"
-set SRCD "C:/Users/wzh/Documents/trustscope/ps_fft_dual/rtl"
+# TRUSTSCOPE_XPR  default <root>/hw/two_fft/two FFT.xpr   (NOT distributed)
+set XPR  [RESOLVE [ENV TRUSTSCOPE_XPR [file join $ROOT hw two_fft "two FFT.xpr"]] $ROOT]
+# TRUSTSCOPE_XSA  default <root>/src/build/FFT.xsa        (output of this script)
+set XSA  [RESOLVE [ENV TRUSTSCOPE_XSA [file join $ROOT src build FFT.xsa]] $ROOT]
+# TRUSTSCOPE_RUNS default: runs dir of the project opened above
+set RUNS [RESOLVE [ENV TRUSTSCOPE_RUNS [file rootname $XPR].runs] $ROOT]
+# TRUSTSCOPE_RTL  default <root>/src/rtl                   (NOT distributed)
+set SRCD [RESOLVE [ENV TRUSTSCOPE_RTL [file join $ROOT src rtl]] $ROOT]
+
+file mkdir [file dirname $XSA]
+L "root      = $ROOT"
+if {[file exists $XPR]}    { set nxpr "  (present)" } else { set nxpr "  (MISSING)" }
+if {[file isdirectory $SRCD]} { set nrtl "" } else { set nrtl "  (MISSING)" }
+L "project   = $XPR$nxpr"
+L "xsa       = $XSA"
+L "runs      = $RUNS"
+L "rtl       = $SRCD$nrtl"
 
 proc MTIME {f} {
     if {![file exists $f]} { return -1 }
@@ -48,6 +94,16 @@ proc STAMP {t} {
 }
 
 L "=========== batch_build ==========="
+
+if {![file exists $XPR]} {
+    L "*** FATAL: no Vivado project at: $XPR"
+    L "*** The .xpr is NOT part of this repository (vendor board files and"
+    L "*** generated IP products are not distributed). Either set TRUSTSCOPE_XPR"
+    L "*** to an existing project, or rebuild the block design from"
+    L "*** src/build/bd/design_1_bd.tcl -- see src/build/README.md."
+    close $_lfh
+    exit 1
+}
 
 if {[catch {
 

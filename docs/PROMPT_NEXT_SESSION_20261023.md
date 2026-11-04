@@ -1,4 +1,4 @@
-# 新会话开场提示词（直接整段复制粘贴）
+﻿# 新会话开场提示词（直接整段复制粘贴）
 
 ---
 
@@ -46,7 +46,7 @@ get_files -of_objects [get_filesets constrs_1]
 ## 第二个任务（XDC 修好之后）：让触屏和采集同时成立
 
 > **2026-10-23 事后注（这一节已过期，别再照做）**：`probe_stream.tcl` 已归档到
-> `C:\Users\wzh\Documents\fpga旧文件\02_被取代的完整流程\`。它缺 FCLK 修复、v_tc 时序与显示几何，
+> `C:\Users\user\Documents\fpga旧文件\02_被取代的完整流程\`。它缺 FCLK 修复、v_tc 时序与显示几何，
 > 因此无论位流好坏都会给出 "no data"——这个判据当时是无效的。
 > 采集的正确做法、以及"板上正常长什么样"，一律看 **`dl/ONBOARD_SCRIPTS.md`**。
 > 结论：采集与触屏在 2026-10-23 已同时跑通（`both captures are live` + `MB_TOUCH_OK=1`）。

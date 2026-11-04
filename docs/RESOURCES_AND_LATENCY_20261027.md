@@ -1,4 +1,4 @@
-# 资源、时序与端到端延迟实测（2026-10-27）
+﻿# 资源、时序与端到端延迟实测（2026-10-27）
 
 > 对应评分项：**3.3.4 优化目标**（"在目标器件上取得可测量的性能表现，**并给出与基线的对比**"）、
 > **3.3.5.1 工程包**（"**综合与实现报告，含资源占用、时钟频率与关键性能指标**"）、
@@ -92,21 +92,21 @@
 
 ```
 D:\Vitis\Vivado\2023.1\bin\vivado.bat -mode batch -nojournal -nolog ^
-  -source C:\Users\wzh\Documents\trustscope\.tmp\fp1_reports_20261027.tcl
+  -source C:\Users\user\Documents\trustscope\.tmp\fp1_reports_20261027.tcl
 ```
 
 脚本内容（`open_checkpoint` 不需要综合、不需要板子）：
 
 ```tcl
 open_checkpoint {D:/BaiduNetdiskDownload/23_ov5640_dual/Vivado/two FFT/two FFT.runs/impl_1/design_1_wrapper_routed.dcp}
-report_utilization -file {C:/Users/wzh/Documents/trustscope/ps_fft_dual/logs/fp1_util_routed_20261027.rpt}
-report_timing_summary -max_paths 1 -report_unconstrained -file {C:/Users/wzh/Documents/trustscope/ps_fft_dual/logs/fp1_timing_routed_20261027.rpt}
+report_utilization -file {C:/Users/user/Documents/trustscope/ps_fft_dual/logs/fp1_util_routed_20261027.rpt}
+report_timing_summary -max_paths 1 -report_unconstrained -file {C:/Users/user/Documents/trustscope/ps_fft_dual/logs/fp1_timing_routed_20261027.rpt}
 ```
 
 ```
 输出: ps_fft_dual/logs/fp1_util_routed_20261027.rpt
 报告头: | Date         : Tue Oct 27 19:19:08 2026
-        | Command      : report_utilization -file C:/Users/wzh/Documents/trustscope/
+        | Command      : report_utilization -file C:/Users/user/Documents/trustscope/
                          ps_fft_dual/logs/fp1_util_routed_20261027.rpt
         | Design State : Routed
 ```

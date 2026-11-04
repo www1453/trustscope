@@ -86,7 +86,7 @@ What each prints (all of it recomputes to section 2):
 
 ## 4. Where to look
 
-- **The full report**: [`works_report_20261103f.pdf`](works_report_20261103f.pdf) (26 pages; the
+- **The full report**: [`report/trustscope_report.pdf`](report/trustscope_report.pdf) (26 pages; the
   `.docx` of the same name is the editable copy).
 - **The dated engineering record**: [`docs/`](docs/) (246 files, ordered by date in the
   filename). Read the three-rate table at the top of
